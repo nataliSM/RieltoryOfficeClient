@@ -6,6 +6,7 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.itis.inform.models.User;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import static javafx.application.Application.launch;
 public class RieltorOfficeClientApplication extends Application{
     private static RieltorOfficeClientApplication instance;
     private Stage stage;
+    private User user;
 
     public RieltorOfficeClientApplication () {
         instance = this;
@@ -41,9 +43,26 @@ public class RieltorOfficeClientApplication extends Application{
         }
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
     private void gotoLogin() {
         try {
             replaceSceneContent("views/login.fxml");
+        } catch (Exception ex) {
+            Logger.getLogger(RieltorOfficeClientApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void goToFeatures() {
+        try {
+            replaceSceneContent("views/features.fxml");
         } catch (Exception ex) {
             Logger.getLogger(RieltorOfficeClientApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,6 +73,7 @@ public class RieltorOfficeClientApplication extends Application{
         Scene scene = stage.getScene();
         if (scene == null) {
             scene = new Scene(page, 700, 550);
+
 //            scene.getStylesheets().add(RieltorOfficeClientApplication.class.getResource("demo.css").toExternalForm());
             stage.setScene(scene);
         } else {

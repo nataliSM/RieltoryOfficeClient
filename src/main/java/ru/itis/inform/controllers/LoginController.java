@@ -1,14 +1,19 @@
 package ru.itis.inform.controllers;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import ru.itis.inform.RieltorOfficeClientApplication;
+import ru.itis.inform.models.User;
 import ru.itis.inform.services.LoginService;
 import ru.itis.inform.services.LoginServiceImpl;
 import javafx.event.ActionEvent;
+import ru.itis.inform.services.Result;
+import ru.itis.inform.services.ServerException;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,7 +26,7 @@ public class LoginController implements Initializable {
     private JFXTextField usernameTextField;
 
     @FXML
-    private JFXTextField passwordTextField;
+    private JFXPasswordField passwordTextField;
 
     @FXML
     private JFXButton loginButton;
@@ -36,7 +41,22 @@ public class LoginController implements Initializable {
 
     @FXML
     public void loginButtonDidPressed(ActionEvent event) {
-        loginService.login(usernameTextField.getText(), passwordTextField.getText());
+        loginService.login(usernameTextField.getText(), passwordTextField.getText(), new Result<User>() {
+            @Override
+            public void successful(User result) {
+                RieltorOfficeClientApplication.getInstance().setUser(result);
+                RieltorOfficeClientApplication.getInstance().goToFeatures();
+            }
+
+            @Override
+            public void failure(ServerException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        });
 
     }
 

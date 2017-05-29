@@ -11,8 +11,6 @@ import ru.itis.inform.models.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static javafx.application.Application.launch;
-
 /**
  * Created by Natalia on 13.05.17.
  */
@@ -51,8 +49,15 @@ public class RieltorOfficeClientApplication extends Application{
         this.user = user;
     }
 
+    public void gotoNewOffer() {
+        try {
+            replaceSceneContent("views/createFeature.fxml");
+        } catch (Exception ex) {
+            Logger.getLogger(RieltorOfficeClientApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-    private void gotoLogin() {
+    public void gotoLogin() {
         try {
             replaceSceneContent("views/login.fxml");
         } catch (Exception ex) {
@@ -63,6 +68,14 @@ public class RieltorOfficeClientApplication extends Application{
     public void goToFeatures() {
         try {
             replaceSceneContent("views/features.fxml");
+        } catch (Exception ex) {
+            Logger.getLogger(RieltorOfficeClientApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void goToSignUp() {
+        try {
+            replaceSceneContent("views/registration.fxml");
         } catch (Exception ex) {
             Logger.getLogger(RieltorOfficeClientApplication.class.getName()).log(Level.SEVERE, null, ex);
         }

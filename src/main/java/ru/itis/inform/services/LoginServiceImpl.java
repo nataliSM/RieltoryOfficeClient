@@ -3,7 +3,7 @@ package ru.itis.inform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.*;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import ru.itis.inform.models.Offer;
+import ru.itis.inform.dto.UserRegistrationDto;
 import ru.itis.inform.models.User;
 
 import java.io.IOException;
@@ -19,26 +19,6 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void login(String username, String password, Result<User> result) {
-        Unirest.setObjectMapper(new ObjectMapper() {
-            private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
-                    = new com.fasterxml.jackson.databind.ObjectMapper();
-
-            public <T> T readValue(String value, Class<T> valueType) {
-                try {
-                    return jacksonObjectMapper.readValue(value, valueType);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            public String writeValue(Object value) {
-                try {
-                    return jacksonObjectMapper.writeValueAsString(value);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
 
         try {
             HttpResponse<JsonNode> response = Unirest.post(BASE_URL+"login")
@@ -69,4 +49,56 @@ public class LoginServiceImpl implements LoginService {
 
         }
     }
+
+    public void register(String username, String password, String email, Result<User> result) {
+        Unirest.setObjectMapper(new ObjectMapper() {
+            private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
+                    = new com.fasterxml.jackson.databind.ObjectMapper();
+
+            public <T> T readValue(String value, Class<T> valueType) {
+                try {
+                    return jacksonObjectMapper.readValue(value, valueType);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            public String writeValue(Object value) {
+                try {
+                    return jacksonObjectMapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        try {
+            UserRegistrationDto registrationDto = new UserRegistrationDto();
+            registrationDto.setEmail(email);
+            registrationDto.setPassword(password);
+            registrationDto.setUsername(username);
+            HttpResponse<User> response = Unirest.post(BASE_URL+"register")
+                    .header("accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .body(registrationDto)
+                    .asObject(User.class);
+
+
+
+            int code = response.getStatus();
+            if (code != 200) {
+                result.failure(new ServerException("Internal Server Error"));
+                return;
+            }else {
+                result.successful(response.getBody());
+            }
+
+        } catch (UnirestException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getCause() + e.getMessage());
+            result.failure(new ServerException("Internal Server Error"));
+
+        }
+    }
+
+
 }

@@ -7,5 +7,4 @@ import ru.itis.inform.models.User;
  */
 public interface LoginService {
     public void login(String username, String password, Result<User> result);
-    public void register(String username, String password, String email, Result<User> result);
 }

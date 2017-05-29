@@ -9,6 +9,4 @@ public interface Result<T> {
 
     void failure(ServerException e);
 
-
-
 }

@@ -62,7 +62,7 @@ public class LoginController implements Initializable {
 
     @FXML
     public void signUpButtonDidPressed(ActionEvent event) {
-        RieltorOfficeClientApplication.getInstance().goToSignUp();
+
     }
 
 }
